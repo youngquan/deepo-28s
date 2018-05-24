@@ -1,0 +1,6 @@
+# some dir to be excluded from the bulid stage
+*
+!.dockeringore
+!Dockerfile
+!sources.list
+!start.sh
