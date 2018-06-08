@@ -2,7 +2,7 @@
 # module list
 # ------------------------------------------------------------------
 # ssh           latest (apt)
-# python        2.7    (apt)
+# python        3.6    (apt)
 # jupyter       latest (pip)
 # tensorflow    1.4.1  (pip)
 # keras         latest (pip)
@@ -14,7 +14,7 @@ FROM nvidia/cuda:8.0-cudnn6-devel
 COPY sources.list /etc/apt/
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade -i https://mirrors.ustc.edu.cn/pypi/web/simple" && \
+    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade -i https://mirrors.aliyun.com/pypi/simple/" && \
     GIT_CLONE="git clone --depth 10" && \
 
     rm -rf /var/lib/apt/lists/* \
@@ -53,12 +53,21 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python-pip \
-        python-dev \
+        software-properties-common \
         && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        python3.6 \
+        python3.6-dev \
+        && \
+    wget -O ~/get-pip.py \
+        https://bootstrap.pypa.io/get-pip.py && \
+    python3.6 ~/get-pip.py && \
+    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
+    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
     $PIP_INSTALL \
         setuptools \
-        pip \
         && \
     $PIP_INSTALL \
         numpy \
@@ -75,9 +84,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # boost
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libboost-all-dev \
-        && \
+    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+    tar -zxf ~/boost.tar.gz -C ~ && \
+    cd ~/boost_* && \
+    ./bootstrap.sh --with-python=python3.6 && \
+    ./b2 install --prefix=/usr/local && \
 
 # ==================================================================
 # jupyter

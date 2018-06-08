@@ -47,7 +47,7 @@ class Composer(object):
             ''',
             r'''
             RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-                PIP_INSTALL="python -m pip --no-cache-dir install --upgrade -i https://mirrors.ustc.edu.cn/pypi/web/simple" && \
+                PIP_INSTALL="python -m pip --no-cache-dir install --upgrade -i https://mirrors.aliyun.com/pypi/simple/" && \
                 GIT_CLONE="git clone --depth 10" && \
 
                 rm -rf /var/lib/apt/lists/* \
