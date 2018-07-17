@@ -103,6 +103,7 @@ class Composer(object):
             COPY start.sh /usr/local/bin/
             RUN chmod +x /usr/local/bin/start.sh
             ENV SHELL=/bin/bash
+            ENV LANG C.UTF-8
             CMD ["start.sh"]
             ''',
             ]))
